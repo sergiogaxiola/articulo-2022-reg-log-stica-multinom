@@ -1,0 +1,66 @@
+
+
+##salud y precariedad
+install.packages("foreign")
+require("foreign")
+base <- basensa ## ensanut 2018 la base se creo con la enasanut 2018 generando una variable de nivel de precariedad(bajo, medio y alto
+# la base se llama basensa con 5084 observacionbes
+##  
+#   Variable dependiente: precariedad (bajo, medio y alto=
+# NIVEL de precariedad
+#1 bajo *
+# 2 medio
+#3 alto
+
+#   Variables  Independientes
+
+#1. Tabaco
+# 1 Nunca fuma
+# 2 alguna vez fumo
+# 3 Fuma
+
+#2. Alcohol -----alcohol
+#   1 NUnca toma
+#   2 Alguna vez toma
+#   3 Toma
+
+#3. Peso ------- peso
+#   1 Normal
+#   2 Bajo
+#   3 Sobre peso
+#   4 Obesidad
+
+#4. Funcionalidad.... funciona
+#   1 Ninguna dificultad
+#   2 Al menos una
+
+#5. Depresión.... depre
+#   1 Sí tiene
+#   2 No tiene
+
+#   6. Diabetes--- diabe
+#   1 Sí tiene
+#   2 No tiene
+
+
+#7. Hipertensión---- hiper
+#   1 Sí tiene
+#   2 No tiene
+
+#8.Cardiovascular---- cardio
+#   1 Sí tiene
+#   2 No tiene
+
+#####################################################
+#       Beca para estudiar
+#       Programa gobierno
+#       Ayuda familiar
+#       Otro tipo de ayuda
+#       No recibe
+
+#limpiando base
+base2 <- na.omit(data.frame(base$t_per,base$t_apo1,as.numeric( base$sex),as.numeric( base$eda1),as.numeric( base$par1),
+                            as.numeric( base$tam_hog),as.numeric( base$ocu_jefe)))
+names(base2)
+modelo.logit<-glm(base2$base.t_per~ ., data = base2,family="gaussian")
+summary(modelo.logit)
