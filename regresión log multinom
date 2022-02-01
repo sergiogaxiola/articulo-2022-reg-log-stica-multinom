@@ -1,5 +1,7 @@
 
 
+############### SCRIPT ESTA EN GITHUB (ART 2022 REG LOGISTICA) ####
+
 ##salud y precariedad
 install.packages("foreign")
 require("foreign")
@@ -11,24 +13,38 @@ base <- basensa ## ensanut 2018 la base se creo con la enasanut 2018 generando u
 #1 bajo *
 # 2 medio
 #3 alto
+### recodificar la variable precariedad
+basensa1<- as_tibble(basensa1) %>%
+  mutate(precar= case_when(cls.cluster == 1  ~ 1,
+                           cls.cluster == 2  ~ 3,
+                           cls.cluster == 3  ~ 2,
+  ))
 
-#   Variables  Independientes
 
-#1. Tabaco
+#   Variables  Independientes   las variables independientes no se necesitan recodificar
+#estan correctas
+
+#1. Tabaco----------------- tabaco2018
 # 1 Nunca fuma
 # 2 alguna vez fumo
 # 3 Fuma
+
+
 
 #2. Alcohol -----alcohol
 #   1 NUnca toma
 #   2 Alguna vez toma
 #   3 Toma
 
+
+
 #3. Peso ------- peso
 #   1 Normal
 #   2 Bajo
 #   3 Sobre peso
 #   4 Obesidad
+
+
 
 #4. Funcionalidad.... funciona
 #   1 Ninguna dificultad
@@ -51,16 +67,19 @@ base <- basensa ## ensanut 2018 la base se creo con la enasanut 2018 generando u
 #   1 Sí tiene
 #   2 No tiene
 
-#####################################################
-#       Beca para estudiar
-#       Programa gobierno
-#       Ayuda familiar
-#       Otro tipo de ayuda
-#       No recibe
+
 
 #limpiando base
-base2 <- na.omit(data.frame(base$t_per,base$t_apo1,as.numeric( base$sex),as.numeric( base$eda1),as.numeric( base$par1),
-                            as.numeric( base$tam_hog),as.numeric( base$ocu_jefe)))
+baselogit <- na.omit(data.frame(basensa1$precar,basensa1$tabaco2018,basensa1$alcohol2018, basensa1$imc2018_oms,
+                            basensa1$funcionamiento2018, basensa1$depresion2018,basensa1$diabetes2018, 
+                            basensa1$hipertension2018, basensa1$cardiaca2018))
 names(base2)
-modelo.logit<-glm(base2$base.t_per~ ., data = base2,family="gaussian")
+modelo.logit<-glm(baselogit$basensa1.precar~ ., data = baselogit,family="gaussian")
 summary(modelo.logit)
+# probando con otra libreria el multinom
+library (nnet)
+
+modelo.logi1 <- multinom ( basensa1.precar ∼ . , data = baselogit )
+multinom.fit <- multinom(basensa1.precar ~ basensa1.tabaco2018 + basensa1.alcohol2018+ 
+                         basensa1.imc2018_oms+ basensa1.funcionamiento2018+ basensa1.depresion2018+ 
+                         basensa1.diabetes2018+ basensa1.hipertension2018+ basensa1.cardiaca2018, data = baselogit)
